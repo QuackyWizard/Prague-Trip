@@ -1,0 +1,5 @@
+Polna 34, Środa Wielkopolska,WP,Poland
+Warsaw,MZ, Poland
+Poznan,WP, Poland
+Berlin, Germany
+Gdansk, PM, Poland
