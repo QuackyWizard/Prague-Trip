@@ -1,4 +1,4 @@
 .env
-.html
+*.html
 matrix.txt
 __pycache__/
