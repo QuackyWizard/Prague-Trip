@@ -5,7 +5,7 @@ import folium
 import routing
 import os
 from dotenv import load_dotenv
-
+import json
 def main():
     #api_key = {your api key}
     load_dotenv()  
@@ -26,7 +26,10 @@ def main():
             locations.append(coordinates)
             N += 1
 
-    distances = routing.get_distance_matrix(client, locations)['durations']
+    # Get distance matrix
+    matrix = routing.get_distance_matrix(client, locations)
+    json.dump(matrix, open("matrix.json","w"))
+    distances = matrix['durations']
 
     #save the matrix to txt
     with open("matrix.txt","w") as f:
@@ -38,9 +41,10 @@ def main():
     
     colors = ['red','green','blue','purple','orange','darkred','lightred','beige','darkblue','darkgreen','cadetblue','darkpurple']
     algorithms = [nearest_neighbour,brute_force]
+    
     for alg in algorithms:
         r,d= alg(distances,N)
-    
+
         m = folium.Map(location=[locations[0][1], locations[0][0]], zoom_start=20)
         for i in range(N):
             c = colors[i%len(colors)]
@@ -48,7 +52,7 @@ def main():
             folium.Marker(route[0][::-1], popup=f"Location {i}").add_to(m)
             cords = routing.get_route(client,route)
             folium.PolyLine(cords, color=c, weight=3, opacity=0.8).add_to(m)
-        print(d)
+        
         m.save(f"{alg.__name__}.html")
 
 

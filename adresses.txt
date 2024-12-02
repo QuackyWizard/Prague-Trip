@@ -1,5 +1,6 @@
-Polna 34, Środa Wielkopolska,WP,Poland
+Prague, Czechia
 Warsaw,MZ, Poland
 Poznan,WP, Poland
 Berlin, Germany
 Gdansk, PM, Poland
+Budapest, Hungary
