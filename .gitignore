@@ -2,3 +2,4 @@
 *.html
 matrix.txt
 __pycache__/
+.json

@@ -45,5 +45,5 @@ def brute_force(matrix, n):
     return optimal_route + (0,), min_duration
 
 
-
+ 
 

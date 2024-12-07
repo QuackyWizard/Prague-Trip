@@ -1,11 +1,10 @@
-import openrouteservice
-import requests
 from solve_tsp import brute_force, nearest_neighbour, calculate_total_duration
 import folium
 import routing
 import os
 from dotenv import load_dotenv
 import json
+import time
 def main():
     #api_key = {your api key}
     load_dotenv()  
@@ -27,16 +26,13 @@ def main():
             N += 1
 
     # Get distance matrix
-    matrix = routing.get_distance_matrix(client, locations)
-    json.dump(matrix, open("matrix.json","w"))
-    distances = matrix['durations']
+    distances = routing.get_distance_matrix(client, locations)['durations']
+    
+    
 
-    #save the matrix to txt
-    with open("matrix.txt","w") as f:
-        for row in distances:
-            for n in row:
-                f.write(str(n) + " ")
-            f.write("\n")
+    # Save distance matrix to JSON
+    with open("output.json", "w") as f:
+        json.dump([{"matrix":distances}], f)
 
     
     colors = ['red','green','blue','purple','orange','darkred','lightred','beige','darkblue','darkgreen','cadetblue','darkpurple']
@@ -44,7 +40,7 @@ def main():
     
     for alg in algorithms:
         r,d= alg(distances,N)
-
+        
         m = folium.Map(location=[locations[0][1], locations[0][0]], zoom_start=20)
         for i in range(N):
             c = colors[i%len(colors)]
@@ -54,7 +50,9 @@ def main():
             folium.PolyLine(cords, color=c, weight=3, opacity=0.8).add_to(m)
         
         m.save(f"{alg.__name__}.html")
-
-
+        print(f"Total duration for {alg.__name__}: {d}")
+        with open("output.json", "a") as f:
+            json.dump([{"route":r,"total_duration":d}], f)
+        
 if __name__ == "__main__":
     main()
