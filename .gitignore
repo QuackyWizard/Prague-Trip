@@ -1,5 +1,8 @@
 .env
 *.html
-matrix.txt
+*.txt
 __pycache__/
 .json
+.vscode/
+data/
+output/

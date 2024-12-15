@@ -1,4 +1,4 @@
-from solve_tsp import brute_force, nearest_neighbour, calculate_total_duration
+from solve_tsp import *
 import folium
 import routing
 import os
@@ -25,18 +25,14 @@ def main():
             locations.append(coordinates)
             N += 1
 
+    print(locations)
     # Get distance matrix
     distances = routing.get_distance_matrix(client, locations)['durations']
     
-    
-
-    # Save distance matrix to JSON
-    with open("output.json", "w") as f:
-        json.dump([{"matrix":distances}], f)
-
-    
+    output = {}
+   
     colors = ['red','green','blue','purple','orange','darkred','lightred','beige','darkblue','darkgreen','cadetblue','darkpurple']
-    algorithms = [nearest_neighbour,brute_force]
+    algorithms = [nearest_neighbour,brute_force, held_karp, ant_colony_optimization]
     
     for alg in algorithms:
         r,d= alg(distances,N)
@@ -51,8 +47,11 @@ def main():
         
         m.save(f"{alg.__name__}.html")
         print(f"Total duration for {alg.__name__}: {d}")
-        with open("output.json", "a") as f:
-            json.dump([{"route":r,"total_duration":d}], f)
-        
+        output[alg.__name__] = {"route":r , "duration": d}
+
+    print(output)
+    with open("output.json","w") as f:
+        json.dump(output,f, indent=4)
+    
 if __name__ == "__main__":
     main()
