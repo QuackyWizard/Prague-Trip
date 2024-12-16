@@ -3,20 +3,34 @@ import folium
 import routing
 import os
 from dotenv import load_dotenv
-import json
-import time
-def main():
-    #api_key = {your api key}
+import sys
+#This program reads a list of addresses from "adresses.txt" file and calculates the shortest route to visit all of them using different algorithms
+#The output is saved in a html file for each algorithm
+#The program uses the openrouteservice API to get the coordinates and the distance matrix for the locations
+#The program uses the solve_tsp.py to calculate the shortest route using different algorithms
+#The program uses the folium library to create the map and display the route
+#The program uses the dotenv library to load the API key from a .env file
+
+def main(args):
     load_dotenv()  
     API_KEY = os.getenv("API_KEY")
+    #API_KEY = {your api key}
     client = routing.make_client(API_KEY)
 
 
     locations = []
     N = 0 # Number of locations
+    
+    if len(args) != 2:
+        print("Usage: python main.py <input file path>")
+        return 
+    try:
+        with open(args[1],"r") as f:
+            adresses = [l.strip() for l in f]
+    except:
+        print("Error reading file - adresses.txt")
+        return
 
-    with open("adresses.txt","r") as f:
-        adresses = [l.strip() for l in f]
 
     # Get coordinates for each address
     for address in adresses:
@@ -50,8 +64,7 @@ def main():
         output[alg.__name__] = {"route":r , "duration": d}
 
     print(output)
-    with open("output.json","w") as f:
-        json.dump(output,f, indent=4)
+    
     
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
