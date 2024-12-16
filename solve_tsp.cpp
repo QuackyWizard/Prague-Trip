@@ -19,7 +19,7 @@
 #include <fstream>
 #include <string>
 #include "json.hpp"
-
+#include <chrono>
 using json = nlohmann::json; ///< Alias for the JSON library
 using namespace std;
 
@@ -249,17 +249,34 @@ pair<vector<int>, double> heldKarp(const vector<vector<double>>& matrix, int n) 
 /**
  * @brief Main function to read input data, execute TSP algorithms, and save results.
  * @return 0 on successful execution, non-zero on error.
+ * @param argc The number of command-line arguments.
+ * @param argv The command-line arguments.
+ * @note The command-line argument is the number of files to process.
  */
-int main() {
+int main(int argc, char* argv[]) {
     string filename;
     string outputFilename;
     int n;
     vector<int> route;
     double length;
-    vector<string> algorithms = {"Nearest Neighbor", "Brute Force", "Ant Colony Optimization", "Held-Karp"};
 
-    for (int i = 5; i < 100; ++i) {
-        filename = "data/matrix_" + to_string(i) + ".txt";
+    vector<string> algorithms = {
+    "Nearest Neighbor", 
+    "Brute Force", 
+    "Ant Colony Optimization", 
+    "Held-Karp"
+    }; ///< List of algorithms to run 
+    
+    if (argc != 3) {
+        cerr << "Usage: " << argv[0] << "<start> <end>" << endl;
+        return 1;
+    }
+
+    int end = std::stoi(argv[2]);
+    int start = std::stoi(argv[1]);
+
+    for (int i = start; i < end+1; i++) {
+        filename = "data/matrix_" + to_string(i) + ".txt"; // Read the matrix from a file (from the "data" folder)
         ifstream inputFile(filename);
 
         if (!inputFile) {
@@ -283,9 +300,11 @@ int main() {
         inputFile.close();
 
         json results;
-
+       
         // Execute each algorithm
         for (const string& algorithm : algorithms) {
+            auto start = chrono::high_resolution_clock::now();
+
             if (algorithm == "Nearest Neighbor") {
                 cout << "Running Nearest Neighbor Algorithm..." << endl;
                 auto result = nearestNeighbour(matrix, n);
@@ -308,14 +327,20 @@ int main() {
                 length = result.second;
             }
 
+            auto end = chrono::high_resolution_clock::now();
+            auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
+
             // Save the results in JSON format
             results[algorithm] = {
                 {"route", route},
-                {"duration", length}
+                {"duration", length},
+                {"time", duration.count()},
+                {"size", i}
             };
+
         }
 
-        // Write results to a JSON file
+        // Write results to a JSON file (into the "output" folder)
         outputFilename = "output/output_" + to_string(i) + ".json";
         ofstream outputFile(outputFilename);
         if (!outputFile) {
