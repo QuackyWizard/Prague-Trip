@@ -2,6 +2,8 @@ from itertools import permutations
 import numpy as np
 import random
 
+#implementation of TSP algorithms in python
+
 def ant_colony_optimization(matrix, n, num_ants = 100, num_iterations = 10, alpha=1.0, beta=2.0, evaporation_rate=0.5):
     pheromone = np.ones((n, n))  # Initial pheromone levels
     best_route = None
