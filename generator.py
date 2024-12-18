@@ -8,8 +8,9 @@ def generate_matrix(size, max_value=10000.0):
         return matrix
 
 def main(args):
-    if len(args) != 2:
-        print("Usage: python generator.py <size>")
+    np.random.seed(int(args[2]))
+    if len(args) != 3:
+        print("Usage: python generator.py <size> <seed>")
 
     if not os.path.exists('data'):
         os.makedirs('data')
