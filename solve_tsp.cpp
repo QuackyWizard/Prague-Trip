@@ -306,7 +306,6 @@ int main(int argc, char* argv[]) {
             auto start = chrono::high_resolution_clock::now();
 
             if (algorithm == "Nearest Neighbor") {
-                cout << "Running Nearest Neighbor Algorithm..." << endl;
                 auto result = nearestNeighbour(matrix, n);
                 route = result.first;
                 length = result.second;
@@ -316,12 +315,10 @@ int main(int argc, char* argv[]) {
                 route = result.first;
                 length = result.second;
             } else if (algorithm == "Ant Colony Optimization") {
-                cout << "Running Ant Colony Optimization Algorithm..." << endl;
                 auto result = antColonyOptimization(matrix, n);
                 route = result.first;
                 length = result.second;
             } else if (algorithm == "Held-Karp") {
-                cout << "Running Held-Karp Algorithm..." << endl;
                 auto result = heldKarp(matrix, n);
                 route = result.first;
                 length = result.second;
@@ -329,17 +326,17 @@ int main(int argc, char* argv[]) {
 
             auto end = chrono::high_resolution_clock::now();
             auto duration = chrono::duration_cast<chrono::milliseconds>(end - start);
-
+            cout << algorithm << " completed in " << duration.count() << "ms" << endl;
+            
             // Save the results in JSON format
             results[algorithm] = {
                 {"route", route},
                 {"duration", length},
                 {"time", duration.count()},
-                {"size", i}
             };
 
         }
-
+        results["size"] = n;
         // Write results to a JSON file (into the "output" folder)
         outputFilename = "output/output_" + to_string(i) + ".json";
         ofstream outputFile(outputFilename);
