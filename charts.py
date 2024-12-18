@@ -49,7 +49,7 @@ def main():
         
         if alg == "Nearest Neighbor":
             df2 = df[df['num_locations'] >= 500]
-            sns.lineplot(data=xd, x='num_locations', y=alg, label=alg)
+            sns.lineplot(data=df2, x='num_locations', y=alg, label=alg)
         else:    
             sns.lineplot(data=df, x='num_locations', y=alg, label=alg)
         
