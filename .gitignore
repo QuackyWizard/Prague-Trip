@@ -1,8 +1,14 @@
 .env
-*.html
 *.txt
 __pycache__/
 .json
 .vscode/
 data/
 output/
+maps/
+charts.py
+charts/
+quality_test.py
+TEST/
+
+
