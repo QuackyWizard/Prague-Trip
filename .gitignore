@@ -6,7 +6,6 @@ __pycache__/
 data/
 output/
 maps/
-charts.py
 charts/
 quality_test.py
 TEST/
